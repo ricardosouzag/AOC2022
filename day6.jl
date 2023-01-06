@@ -6,9 +6,9 @@ open("day6.txt") do file
     while length(chars) < 4
         i += 1
         chars = Set(buffer[1+i:4+i])
-    end 
+    end
 
-    println("We need to process ", i+4, " characters before the first start-of-packet marker.")
+    println("We need to process ", i + 4, " characters before the first start-of-packet marker.")
 
     chars = Set(buffer[1:14])
     i = 0
@@ -16,6 +16,6 @@ open("day6.txt") do file
         i += 1
         chars = Set(buffer[1+i:14+i])
     end
-    
-    println("We need to process ", i+14, " characters before the first start-of-message marker.")
+
+    println("We need to process ", i + 14, " characters before the first start-of-message marker.")
 end
