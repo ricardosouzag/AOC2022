@@ -1,5 +1,26 @@
-open("day3.txt") do file
-    lines = readlines(file)
+function calculate_priority(value, items)
+    return sum(value[item...] for item in items)
+end
+
+function generate_inventory(lines)
+    return [[line[begin:1:length(line)÷2], line[length(line)÷2+1:1:end]] for line in lines]
+end
+
+function calculate_mistakes(inventory)
+    return [intersect(bag[1], bag[2]) for bag in inventory]
+end
+
+function group_lines(lines)
+    return [lines[i:1:i+2] for i in range(1, length(lines), step=3)]
+end
+
+function calculate_badges(groups)
+    return [intersect(elves...) for elves in groups]
+end
+
+function process_file(file_path)
+    lines = readlines(file_path)
+    
     value = Dict(
         'a' => 1,
         'b' => 2,
@@ -52,15 +73,27 @@ open("day3.txt") do file
         'W' => 49,
         'X' => 50,
         'Y' => 51,
-        'Z' => 52)
-    inventory = [[line[begin:1:length(line)÷2], line[length(line)÷2+1:1:end]] for line in lines]
-    mistakes = [intersect(bag[1], bag[2]) for bag in inventory]
-
-    rucksackpriority = sum([value[item...] for item in mistakes])
-    println("The sum of the priorities of the repeated items in the rucksack is ", rucksackpriority)
-
-    groups = [lines[i:1:i+2] for i in range(1,length(lines), step=3)]
-    badges = [intersect(elves...) for elves in groups]
-    badgespriority = sum([value[badge...] for badge in badges])
-    println("The sum of the priorities of the badges of each group is ", badgespriority)
+        'Z' => 52,
+        )
+    
+    inventory = generate_inventory(lines)
+    mistakes = calculate_mistakes(inventory)
+    rucksack_priority = calculate_priority(value, mistakes)
+    
+    groups = group_lines(lines)
+    badges = calculate_badges(groups)
+    badges_priority = calculate_priority(value, badges)
+    
+    return rucksack_priority, badges_priority
 end
+
+function print_results(priorities)
+    rucksack_priority, badges_priority = priorities
+    
+    println("The sum of the priorities of the repeated items in the rucksack is ", rucksack_priority)
+    
+    println("The sum of the priorities of the badges of each group is ", badges_priority)
+end
+
+file_path = "day3.txt"
+(print_results ∘ process_file)(file_path)
